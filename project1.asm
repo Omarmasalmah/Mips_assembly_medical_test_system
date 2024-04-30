@@ -1,11 +1,11 @@
-#    ****************************************************************************
-#    *      Title: Medical Test Management System in MIPS Assembly              *
-#    *                                                                          *
-#    *	       ---------> Authors <-------- 					*
-#    *		    Omar Masalmah	     1200060   	                        *
-#    *		    Mohammad abu shams 	     1200549	                        *
-#    *                                                                          *
-#    ****************************************************************************
+#         ****************************************************************************
+#         *      Title: Medical Test Management System in MIPS Assembly              *
+#         *                                                                          *
+#         *	       ---------> Authors <-------- 			             *
+#         *		  Omar Masalmah	           1200060   	                     *
+#         *		  Mohammad abu shams 	   1200549	                     *
+#         *                                                                          *
+#         ****************************************************************************
 
 
 ############# 	Data segment ###############
@@ -1871,10 +1871,7 @@ update_test:
     # Check if user choice is within the valid range
     blez $t6, invalid_no_line  # Assuming $zero holds the value 0
     bgt $t6, $s3, invalid_no_line    # Assuming $a0 holds the value of no_of_edit
-    # Print a newline character
-    li $v0, 11             # syscall 11 = print character
-    li $a0, 0xA            # ASCII value for newline character
-    syscall
+    
     
     la $t2, ($s1)  # Load address of records buffer into $t2
     la $t4,0    # counter for line number
@@ -1898,6 +1895,11 @@ start_update:
     # copy the test type to the name_temp buffer
     la $a2, name_temp
     jal copy_string    
+    
+    
+    la $a0, name_temp
+#     la $v0,4
+#     syscall 
      
     # Load the first byte (second character due to zero-indexing) of the string into $t0
     lb $t0, 1($a0)
@@ -1932,13 +1934,17 @@ start_update:
     jal copy_string
     
     la $a0, float_buffer
-    la $v0,4
-    syscall 
+ #   la $v0,4
+ #   syscall 
      
     addiu $a1, $a1, 1 # Move to the next byte
 
 
 la $t0, float_temp   # Load the address of float_temp into $t0
+
+li $t4, 32    # Ascii code for space
+sb $t4, ($a1)
+addiu $a1, $a1, 1
 
 store_byte_loop:  
     lb $t2, 0($t0) 
@@ -1996,14 +2002,17 @@ update_bpt:
     jal copy_string
     
     la $a0, float_buffer
-    la $v0,4
-    syscall 
+ #   la $v0,4
+ #   syscall 
      
     addiu $a1, $a1, 1 # Move to the next byte     
 
     la $t0, float_temp1   # Load the address of float_temp into $t0
     la $t5, float_temp2   # Load the address of float_temp into $t0
 
+li $t4, 32    # Ascii code for space
+sb $t4, ($a1)
+addiu $a1, $a1, 1
 
 store_byte_loop1:  
     lb $t2, 0($t0) 
@@ -2018,7 +2027,7 @@ store_byte_loop2:
     li $t4, 44    # Ascii code for ,
     sb $t4, ($a1)
     addiu $a1, $a1, 1
-    li $t4, 32    # Ascii code for ,
+    li $t4, 32    # Ascii code for space
     sb $t4, ($a1)
     addiu $a1, $a1, 1
 
@@ -2072,7 +2081,7 @@ add_null_terminator:
     li $a0, 0xA            # ASCII value for newline character
     syscall
 
-# After the loop, the line has been deleted from the search_results buffer    
+# After the loop, the line has been updated   
     li $v0, 4
     la $a0, records
     syscall     
@@ -2201,13 +2210,7 @@ clear_records:
     lb $t1, 0($t0)  # Load byte from records buffer
     bnez $t1, clear_records  # If byte is not zero, continue clearing
 
-    # Print a newline character
-    li $v0, 11             # syscall 11 = print character
-    li $a0, 0xA            # ASCII value for newline character
-    syscall
-	li $v0, 4
-    la $a0, test_deleted
-    syscall
+    
 
     # Copy the data from search_results to records
     la $t0, ($s1)  # Load address of records buffer into $t0
@@ -2228,8 +2231,16 @@ end_clear:
     li $a0, 0xA            # ASCII value for newline character
     syscall
     li $v0, 4		# print string syscall code = 4
-	la $a0, records
-	syscall
+    la $a0, records 
+    syscall
+    
+    # Print a newline character
+    li $v0, 11             # syscall 11 = print character
+    li $a0, 0xA            # ASCII value for newline character
+    syscall
+    li $v0, 4
+    la $a0, test_deleted
+    syscall
     
 #    # Write new test to file
     li $v0, 13            # syscall 15 = file status.  The status system call is used to obtain information about a file, such as its size, permissions, and other attributes.
