@@ -1,7 +1,7 @@
 #         ****************************************************************************
 #         *      Title: Medical Test Management System in MIPS Assembly              *
 #         *                                                                          *
-#         *	          ---------> Authors <-------- 			             *
+#         *	          ---------> Authors <-------- 			       *
 #         *		  Omar Masalmah	           1200060   	                     *
 #         *		  Mohammad abu shams 	   1200549	                     *
 #         *                                                                          *
